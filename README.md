@@ -77,7 +77,7 @@ sqlite3 results.db ".import --csv results/results.csv samples" \
   "SELECT patient, id, gc FROM samples WHERE tissue='tumour'"
 ```
 
-The files match pattern 1, but nothing depends on their names. Rename the outputs and the index still says which sample each file belongs to.
+The files match pattern 1, but nothing downstream parses their names. Change how the pipeline names its outputs (in the process, or with `path` in the `output {}` block) and the index still says which sample each file belongs to. The index records each file's path at publish time, so if you move or rename files after the run, the index no longer points at them.
 
 ## Why the output syntax is better
 
