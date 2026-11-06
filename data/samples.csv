@@ -1,0 +1,4 @@
+id,patient,tissue,fasta
+s1,P01,tumour,data/s1.fa
+s2,P01,normal,data/s2.fa
+s3,P02,tumour,data/s3.fa
