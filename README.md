@@ -10,11 +10,13 @@ All three run the same toy pipeline: three samples with `patient` and `tissue` m
 
 The short version: the workflow output syntax is the only one of the three where Nextflow itself writes down which sample each file belongs to. With the other two, you rebuild that link after the run.
 
-| | Pattern | What links a file to its sample | Cost |
-|-|-|-|-|
-| 1 | `publishDir` | Only the filename | None, it's the default |
-| 2 | `publishDir` + lineage | A provenance graph you walk back to each task's inputs | Config flag + a resolver script |
-| 3 | Records + `output {}` block | An index (CSV/JSON) with one row per sample | Pipeline refactor (static types, records) |
+| | Pattern | What links a file to its sample |
+|-|-|-|
+| 1 | `publishDir` | Only the filename |
+| 2 | `publishDir` + lineage | A provenance graph you walk back to each task's inputs |
+| 3 | Records + `output {}` block | An index (CSV/JSON) with one row per sample |
+
+If you're writing a new pipeline, use records and the `output {}` block.
 
 Tested with Nextflow 26.10.2. Pattern 3 uses static types and record types, so it needs a recent Nextflow release.
 
@@ -83,4 +85,4 @@ The files match pattern 1, but nothing depends on their names. Rename the output
 - **Downstream tools need no Nextflow knowledge.** A SQL load, an HTTP POST or a data lake ingest reads a CSV or JSON file. Nobody has to parse filenames or query the lineage store.
 - **Output becomes a contract.** The `output {}` block declares what the pipeline publishes and its type (`Channel<Result>`), so changes to the outputs show up in code review.
 
-The catch: you have to refactor existing pipelines so they emit one record per sample. Doing it as part of a migration to the Nextflow 26.04 standard (strict syntax, static types, records) makes the most sense, but on a large pipeline it is a significant job. Until then, lineage can recover the metadata from existing runs.
+If you're writing a pipeline now, use records and the `output {}` block from the start. For an existing pipeline, move to them as part of a migration to the Nextflow 26.04 standard (strict syntax, static types, records). Until then, lineage can recover the metadata from existing runs.
